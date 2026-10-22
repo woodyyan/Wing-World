@@ -5,6 +5,8 @@ outputs/
 node_modules/
 dist/
 coverage/
+__pycache__/
+*.pyc
 .idea/
 .vscode/
 .env

@@ -84,7 +84,21 @@ for (const entry of all) {
 const city = docs.get('e-city-networks.html');
 assert.match(city, /id="diagram-city"/, '双网城市缺少节点图');
 assert.match(city, /id="diagram-city-section"/, '双网城市缺少剖面图');
-assert.equal([...docs.get('atlas.html').matchAll(/<figure class="diagram"/g)].length, 16, '图解总览应包含16幅图解');
+const placements = JSON.parse(await readFile(path.join(root, 'scripts/illustrations/placements.json'), 'utf8'));
+assert.equal(Object.keys(placements).length, 66, '插图对应表须覆盖66个词条');
+const diagramKeys = new Set(Object.values(placements).flat().map(([key]) => key));
+assert.equal(diagramKeys.size, 53, '当前图鉴版应包含53幅独立图解');
+assert.equal(Object.values(placements).filter((value) => value.length > 0).length, 62, '应有62个词条配有相关图解');
+for (const [id, diagrams] of Object.entries(placements)) {
+  const text = docs.get(`e-${id}.html`);
+  assert(text, `插图对应词条缺失：${id}`);
+  assert.equal([...text.matchAll(/<figure class="diagram illustrated-plate"/g)].length, diagrams.length, `${id}插图数量不符`);
+  for (const [key] of diagrams) {
+    assert(text.includes(`id="diagram-${key}"`), `${id}缺少插图${key}`);
+    assert(text.includes('class="plate-notes"'), `${id}缺少移动可读图例`);
+  }
+}
+assert.equal([...docs.get('atlas.html').matchAll(/<figure class="diagram illustrated-plate"/g)].length, 53, '图鉴总览应包含53幅图解');
 assert.match(await readFile(path.join(root, 'style.css'), 'utf8'), /@media\(max-width:640px\)/, '缺少移动布局');
 
 const config = JSON.parse(await readFile(path.join(root, 'vercel.json'), 'utf8'));
@@ -101,5 +115,5 @@ for (const name of ['site.js', 'scripts/build.mjs', 'scripts/serve.mjs', 'script
   const result = spawnSync(process.execPath, ['--check', path.join(root, name)], { encoding: 'utf8' });
   assert.equal(result.status, 0, `${name}语法错误：${result.stderr}`);
 }
-console.log(`校验通过：${pages.length}个页面、66个词条、16幅图解、${linkCount}个站内资源与锚点引用。`);
+console.log(`校验通过：${pages.length}个页面、66个词条、53幅图鉴、62个配图词条、${linkCount}个站内资源与锚点引用。`);
 console.log('全文索引、移动布局、JavaScript语法与Vercel部署配置检查通过。');

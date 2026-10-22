@@ -15,6 +15,10 @@
 *.pem
 *.key
 
+# Python插图母稿的本地字节码
+__pycache__/
+*.py[cod]
+
 # 日志与系统文件
 *.log
 npm-debug.log*
