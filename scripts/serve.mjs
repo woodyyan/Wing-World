@@ -46,6 +46,6 @@ const server = createServer(async (req, res) => {
 });
 server.on('error', (error) => { console.error(`预览启动失败：${error.message}`); process.exitCode = 1; });
 server.listen(port, '127.0.0.1', () => {
-  console.log(`岚翎百科 ${process.argv.includes('--dist') ? '构建结果' : '源码'}预览：http://127.0.0.1:${port}`);
+  console.log(`飞羽世界百科 ${process.argv.includes('--dist') ? '构建结果' : '源码'}预览：http://127.0.0.1:${port}`);
   console.log('按Ctrl+C停止。');
 });

@@ -2,7 +2,7 @@
   "name": "wing-world-encyclopedia",
   "version": "1.0.0",
   "private": true,
-  "description": "岚翎世界百科：纯静态多页网站",
+  "description": "飞羽世界百科：纯静态多页网站",
   "engines": {
     "node": ">=22"
   },

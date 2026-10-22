@@ -30,7 +30,16 @@ for (const name of pages) {
   assert.match(text, /<!DOCTYPE html>/i, `${name}缺少文档声明`);
   assert.match(text, /<html\b[^>]*lang="zh-CN"/, `${name}缺少中文语言声明`);
   assert.match(text, /name="viewport"[^>]*width=device-width/, `${name}缺少移动视口声明`);
-  assert.match(text, /<title>[^<]+<\/title>/, `${name}缺少标题`);
+  const pageTitle = text.match(/<title>([^<]+)<\/title>/)?.[1];
+  assert(pageTitle, `${name}缺少标题`);
+  if (name === 'index.html') {
+    assert.equal(pageTitle, '飞羽世界百科', '首页标题须与网站正式名称一致');
+  } else {
+    assert(pageTitle.endsWith(' · 飞羽世界百科'), `${name}网站标题后缀不一致`);
+  }
+  assert(text.includes('<span class="brand-name">飞羽世界</span>'), `${name}页眉名称不一致`);
+  assert(text.includes('飞羽世界百科 · 共历七二八年资料汇编'), `${name}页脚名称不一致`);
+  assert(!/\u5c9a\u7fce|飞羽世界世界|飞羽世界百科百科/.test(text), `${name}含旧名称或重复名称`);
   assert(!/地球|现实生物|虚构谱系|虚构地域|人类世界|作者|小说叙事|漫画分镜/.test(text), `${name}含外部世界解释`);
   assert(!/(?:href|src)="(?:\/Users\/|[A-Za-z]:\\)/i.test(text), `${name}含本地绝对路径`);
   const ids = [...text.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]);
