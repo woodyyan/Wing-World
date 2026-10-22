@@ -1,0 +1,16 @@
+# 仅上传构建所需源码，保留本地资料与验证环境
+.git/
+.workbuddy/
+outputs/
+node_modules/
+dist/
+coverage/
+.idea/
+.vscode/
+.env
+.env.*
+*.pem
+*.key
+*.log
+.DS_Store
+Thumbs.db
